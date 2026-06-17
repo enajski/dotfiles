@@ -1,9 +1,10 @@
-;;; packages.el -*- lexical-binding: t; -*-
+;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
 
-;; Add packages here, then run:
-;;   doom sync
-;;
-;; Examples:
-;; (package! ultra-scroll)
-;; (package! org-modern)
+;; Spacemacs parity additions
+(package! solarized-theme)
+(package! exec-path-from-shell)
+(package! copilot)
 
+;; Prevent warm alternate background effects from loading at all.
+(package! solaire-mode :disable t)

@@ -1,53 +1,59 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-(doom! :completion
-       vertico
+;; Current canonical stack keeps Helm for Spacemacs-style workflow parity.
+;; Explore replacing Helm with Vertico later if you want lighter, more native
+;; minibuffer completion (`vertico` + `consult` + `orderless` + `marginalia`).
+(doom! :input
+       :completion
+       company
+       helm
 
        :ui
        doom
-       doom-dashboard
+       dashboard
        hl-todo
        modeline
        ophints
        (popup +defaults)
-       vc-gutter
+       (vc-gutter +pretty)
        vi-tilde-fringe
        workspaces
+       (window-select +numbers)
+       (treemacs +lsp)
 
        :editor
        (evil +everywhere)
        file-templates
        fold
+       multiple-cursors
        snippets
 
        :emacs
        dired
        electric
+       tramp
        undo
        vc
-
-       :term
-       vterm
 
        :checkers
        syntax
 
        :tools
-       direnv
-       editorconfig
        (eval +overlay)
        lookup
+       (lsp +peek)
        magit
 
        :lang
-       data
+       (clojure +lsp)
+       (java +lsp)
+       (javascript +lsp)
        emacs-lisp
-       json
        markdown
-       org
+       data
+       plantuml
        sh
        yaml
 
        :config
        (default +bindings +smartparens))
-
