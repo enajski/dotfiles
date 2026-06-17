@@ -1,0 +1,8 @@
+README.md
+LICENSE
+.git/**
+.gitignore
+.chezmoiignore
+scripts/**
+docs/**
+

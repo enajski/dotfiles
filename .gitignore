@@ -1,0 +1,10 @@
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Machine-local chezmoi state or generated files, if created in the repo.
+chezmoi.toml
+chezmoi.yaml
+chezmoi.json
+

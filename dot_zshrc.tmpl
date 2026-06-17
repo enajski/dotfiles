@@ -1,0 +1,22 @@
+# Managed by chezmoi from dot_zshrc.tmpl.
+
+export DOTFILES_OS="{{ .chezmoi.os }}"
+export DOTFILES_ARCH="{{ .chezmoi.arch }}"
+export DOTFILES_HOST="{{ .chezmoi.hostname }}"
+
+if [ -r "$HOME/.config/shell/env.sh" ]; then
+  . "$HOME/.config/shell/env.sh"
+fi
+
+case $- in
+  *i*)
+    if [ -r "$HOME/.config/shell/interactive.sh" ]; then
+      . "$HOME/.config/shell/interactive.sh"
+    fi
+
+    if [ -r "$HOME/.config/shell/local.zsh" ]; then
+      . "$HOME/.config/shell/local.zsh"
+    fi
+    ;;
+esac
+
