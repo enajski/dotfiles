@@ -41,6 +41,11 @@ From a fresh checkout:
 ./scripts/bootstrap.sh
 ```
 
+If no chezmoi config exists yet, the script writes
+`~/.config/chezmoi/chezmoi.toml` with this checkout as `sourceDir`. If a config
+already exists, the script leaves it untouched and applies this repo with an
+explicit `--source` argument.
+
 Then inspect changes before applying future updates:
 
 ```sh
@@ -90,4 +95,3 @@ Emacs, ripgrep, and GNU find; `fd` is optional but useful.
 - Aliases live in `~/.config/shell/aliases.sh`.
 - Functions live in `~/.config/shell/functions.sh`.
 - Private/local overrides are sourced last.
-
