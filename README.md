@@ -24,6 +24,7 @@ repositories.
 dot_config/
   doom/                 -> ~/.config/doom
   shell/                -> ~/.config/shell
+  zsh/                  -> ~/.config/zsh
 dot_zshrc.tmpl          -> ~/.zshrc
 dot_bashrc.tmpl         -> ~/.bashrc
 dot_bash_profile.tmpl   -> ~/.bash_profile
@@ -40,6 +41,11 @@ From a fresh checkout:
 ```sh
 ./scripts/bootstrap.sh
 ```
+
+On Ubuntu, the bootstrap installs missing `chezmoi`, `zsh`, `git`, and
+`curl` packages with `apt` when `sudo` is available. Zim is installed with
+Linuxbrew if present, otherwise the official `zimfw.zsh` release is downloaded
+to `~/.zim/zimfw.zsh`.
 
 If no chezmoi config exists yet, the script writes
 `~/.config/chezmoi/chezmoi.toml` with this checkout as `sourceDir`. If a config
@@ -94,4 +100,7 @@ Emacs, ripgrep, and GNU find; `fd` is optional but useful.
 - Interactive behavior lives in `~/.config/shell/interactive.sh`.
 - Aliases live in `~/.config/shell/aliases.sh`.
 - Functions live in `~/.config/shell/functions.sh`.
+- Zim modules are declared in `~/.config/zsh/zimrc`; Zim runtime files live in
+  `~/.zim`.
+- Agnoster prompt customizations live in `~/.config/zsh/agnoster.zsh`.
 - Private/local overrides are sourced last.

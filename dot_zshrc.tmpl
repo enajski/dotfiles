@@ -4,12 +4,42 @@ export DOTFILES_OS="{{ .chezmoi.os }}"
 export DOTFILES_ARCH="{{ .chezmoi.arch }}"
 export DOTFILES_HOST="{{ .chezmoi.hostname }}"
 
-if [ -r "$HOME/.config/shell/env.sh" ]; then
-  . "$HOME/.config/shell/env.sh"
-fi
-
 case $- in
   *i*)
+    export ZIM_CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/zimrc"
+    ZIM_HOME="${ZDOTDIR:-$HOME}/.zim"
+    zimfw_zsh=
+
+    for zimfw_prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+      if [[ -r "$zimfw_prefix/opt/zimfw/share/zimfw.zsh" ]]; then
+        zimfw_zsh="$zimfw_prefix/opt/zimfw/share/zimfw.zsh"
+        break
+      fi
+    done
+
+    if [[ -z "$zimfw_zsh" && -r "$ZIM_HOME/zimfw.zsh" ]]; then
+      zimfw_zsh="$ZIM_HOME/zimfw.zsh"
+    fi
+
+    if [[ -r "$zimfw_zsh" ]] &&
+      [[ ! "$ZIM_HOME/init.zsh" -nt "${ZIM_CONFIG_FILE:-${ZDOTDIR:-$HOME}/.zimrc}" ]]; then
+      source "$zimfw_zsh" init
+    fi
+
+    if [[ -r "$ZIM_HOME/init.zsh" ]]; then
+      source "$ZIM_HOME/init.zsh"
+    fi
+
+    if [[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/agnoster.zsh" ]]; then
+      source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/agnoster.zsh"
+    fi
+
+    unset zimfw_prefix zimfw_zsh
+
+    if [ -r "$HOME/.config/shell/env.sh" ]; then
+      . "$HOME/.config/shell/env.sh"
+    fi
+
     if [ -r "$HOME/.config/shell/interactive.sh" ]; then
       . "$HOME/.config/shell/interactive.sh"
     fi
@@ -18,5 +48,9 @@ case $- in
       . "$HOME/.config/shell/local.zsh"
     fi
     ;;
+  *)
+    if [ -r "$HOME/.config/shell/env.sh" ]; then
+      . "$HOME/.config/shell/env.sh"
+    fi
+    ;;
 esac
-

@@ -1,0 +1,12 @@
+# Zim modules are initialized in the order listed here.
+zmodule environment
+zmodule git
+zmodule git-info
+zmodule input
+zmodule termtitle
+zmodule utility
+zmodule completion
+zmodule zsh-users/zsh-autosuggestions
+zmodule zsh-users/zsh-syntax-highlighting
+zmodule prompt-pwd
+zmodule agnoster
