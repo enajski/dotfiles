@@ -27,6 +27,10 @@ if [ -d /usr/local/bin ]; then
   path_prepend /usr/local/bin
 fi
 
+if [ -r "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+  . "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
 export PATH
 export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-vim}"
