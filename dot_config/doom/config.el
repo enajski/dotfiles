@@ -4,7 +4,7 @@
 (setq user-full-name "Wojtek")
 
 ;; Visuals and defaults (ported from Spacemacs)
-(setq doom-theme 'doom-solarized-light
+(setq doom-theme 'solarized-light
       doom-font (font-spec :family "Fira Code" :size 15)
       doom-symbol-font (font-spec :family "Symbols Nerd Font Mono" :size 13)
       display-line-numbers-type t

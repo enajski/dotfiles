@@ -16,6 +16,7 @@ path_append() {
 
 path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/bin"
+path_prepend "$HOME/.emacs.d/bin"
 
 if [ -d /opt/homebrew/bin ]; then
   path_prepend /opt/homebrew/bin
