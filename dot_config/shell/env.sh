@@ -27,12 +27,11 @@ if [ -d /usr/local/bin ]; then
 fi
 
 export PATH
-export EDITOR="${EDITOR:-emacsclient -t}"
-export VISUAL="${VISUAL:-emacsclient -c -a emacs}"
+export EDITOR="${EDITOR:-vim}"
+export VISUAL="${VISUAL:-vim}"
 export PAGER="${PAGER:-less}"
 export LESS="${LESS:--FRX}"
 
 if [ -r "$HOME/.config/shell/local.env" ]; then
   . "$HOME/.config/shell/local.env"
 fi
-
