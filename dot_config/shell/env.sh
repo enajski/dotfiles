@@ -31,6 +31,10 @@ if [ -r "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
   . "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
 
+if [ -r "/snap/bin" ]; then
+  path_prepend /snap/bin
+fi
+
 export PATH
 export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-vim}"
