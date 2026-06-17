@@ -113,7 +113,9 @@
       "TAB" #'evil-switch-to-windows-last-buffer
       "v"   #'er/expand-region
       "f t" #'+treemacs/toggle
-      "; ;" #'comment-line)
+      ";" nil
+      (:prefix (";" . "comment")
+       ";" #'comment-line))
 
 (defun my/select-window-by-number (n)
   "Select window N by left-to-right order. N=0 selects the 10th window."
