@@ -25,6 +25,7 @@ dot_config/
   doom/                 -> ~/.config/doom
   shell/                -> ~/.config/shell
   zsh/                  -> ~/.config/zsh
+dot_zshenv.tmpl         -> ~/.zshenv
 dot_zshrc.tmpl          -> ~/.zshrc
 dot_bashrc.tmpl         -> ~/.bashrc
 dot_bash_profile.tmpl   -> ~/.bash_profile
@@ -95,6 +96,7 @@ Emacs, ripgrep, and GNU find; `fd` is optional but useful.
 
 ## Shell conventions
 
+- `.zshenv` sets early Zsh startup knobs needed before system zshrc files.
 - `.zshrc` and `.bashrc` only source shared files.
 - Shared exports live in `~/.config/shell/env.sh`.
 - Interactive behavior lives in `~/.config/shell/interactive.sh`.
