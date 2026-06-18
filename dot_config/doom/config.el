@@ -50,41 +50,69 @@
         treemacs-no-png-images t
         nerd-icons-font-family nil))
 
-;; Terminal clipboard integration (especially for -nw in WSL)
+;; Clipboard integration.
+(setq select-enable-clipboard t
+      select-enable-primary t
+      ;; Avoid synchronous clipboard polling on every kill/yank in terminal Emacs.
+      save-interprogram-paste-before-kill nil)
+
+(defvar my/system-clipboard-last-text nil)
+
+(defun my/macos-clipboard-set (text &optional _push)
+  "Copy TEXT to the macOS pasteboard."
+  (when (stringp text)
+    (setq my/system-clipboard-last-text text)
+    (with-temp-buffer
+      (insert text)
+      (call-process-region (point-min) (point-max) "pbcopy" nil 0))))
+
+(defun my/macos-clipboard-get ()
+  "Return text from the macOS pasteboard, or nil if Emacs set it last."
+  (let ((text (with-temp-buffer
+                (call-process "pbpaste" nil t nil)
+                (buffer-string))))
+    (unless (or (string-empty-p text)
+                (string= text my/system-clipboard-last-text))
+      text)))
+
+(defun my/wsl-clipboard-set (text &optional _push)
+  "Copy TEXT to the Windows clipboard from WSL."
+  (when (stringp text)
+    (setq my/system-clipboard-last-text text)
+    (with-temp-buffer
+      (insert text)
+      (call-process-region (point-min) (point-max) "clip.exe" nil 0))))
+
+(defun my/wsl-clipboard-get ()
+  "Return text from the Windows clipboard, or nil if Emacs set it last."
+  (let ((text (string-trim-right
+               (replace-regexp-in-string
+                "\r" ""
+                (with-temp-buffer
+                  (call-process "powershell.exe" nil t nil
+                                "-NoProfile" "-Command" "Get-Clipboard -Raw")
+                  (buffer-string))))))
+    (unless (or (string-empty-p text)
+                (string= text my/system-clipboard-last-text))
+      text)))
+
 (unless (display-graphic-p)
-  (setq select-enable-clipboard t
-        select-enable-primary t
-        ;; Avoid synchronous clipboard polling on every kill/yank in -nw.
-        save-interprogram-paste-before-kill nil)
-  ;; Clear any inherited providers to avoid mixed/partial writes.
+  ;; Clear inherited terminal providers to avoid mixed/partial writes.
   (setq interprogram-cut-function nil
         interprogram-paste-function nil)
-  ;; Single deterministic WSL provider.
-  (when (and (executable-find "clip.exe") (executable-find "powershell.exe"))
-    (defun my/wsl-clipboard-set (text &optional _push)
-      (when (stringp text)
-        (with-temp-buffer
-          (insert text)
-          (call-process-region (point-min) (point-max) "clip.exe" nil 0))))
-    (defun my/wsl-clipboard-get ()
-      (string-trim-right
-       (replace-regexp-in-string
-        "\r" ""
-        (with-temp-buffer
-          (call-process "powershell.exe" nil t nil
-                        "-NoProfile" "-Command" "Get-Clipboard -Raw")
-          (buffer-string)))))
-    ;; Replace GUI clipboard shims in terminal mode, because other packages may
-    ;; force interprogram handlers back to these symbols.
+  (cond
+   ((and (eq system-type 'darwin)
+         (executable-find "pbcopy")
+         (executable-find "pbpaste"))
+    (fset 'gui-select-text #'my/macos-clipboard-set)
+    (fset 'gui-selection-value #'my/macos-clipboard-get)
+    (setq interprogram-cut-function #'my/macos-clipboard-set
+          interprogram-paste-function #'my/macos-clipboard-get))
+   ((and (executable-find "clip.exe") (executable-find "powershell.exe"))
     (fset 'gui-select-text #'my/wsl-clipboard-set)
     (fset 'gui-selection-value #'my/wsl-clipboard-get)
-    ;; Keep copy-to-system-clipboard fast and deterministic.
-    (setq interprogram-cut-function #'my/wsl-clipboard-set)
-    ;; Keep system clipboard paste available (C-y / yank from external apps).
-    (setq interprogram-paste-function #'my/wsl-clipboard-get))
-  ;; IMPORTANT: avoid kill-new hook mirroring here.
-  ;; It can introduce latency and break visual-replace paste behavior.
-  )
+    (setq interprogram-cut-function #'my/wsl-clipboard-set
+          interprogram-paste-function #'my/wsl-clipboard-get))))
 
 (after! treemacs
   (unless (display-graphic-p)
@@ -225,6 +253,36 @@
           (lambda ()
             (setq-local copilot-indent-offset 2)))
 
+(use-package! codetutor
+  :demand t
+  :init
+  (setq codetutor-backend 'auto
+        codetutor-model nil
+        codetutor-open-on-enable nil
+        codetutor-start-session-on-open t
+        codetutor-review-on-save t)
+  :config
+  (dolist (mode '(clojure-mode
+                  clojurescript-mode
+                  clojurec-mode
+                  clojure-ts-mode
+                  clojurescript-ts-mode
+                  clojurec-ts-mode))
+    (add-to-list 'codetutor-language-by-major-mode
+                 (cons mode 'clojure)))
+  (defun my/codetutor-decode-utf-8 (text)
+    "Decode byte-encoded UTF-8 backend output before CodeTutor renders it."
+    (cond
+     ((not (stringp text)) text)
+     ((not (multibyte-string-p text))
+      (decode-coding-string text 'utf-8 t))
+     ((string-match-p "[\200-\377]" text)
+      (decode-coding-string (string-make-unibyte text) 'utf-8 t))
+     (t text)))
+  (advice-add 'codetutor--backend-answer :filter-return
+              #'my/codetutor-decode-utf-8)
+  (codetutor-mode 1))
+
 ;; Keep your shell environment import behavior for GUI sessions
 (when (display-graphic-p)
   (when (require 'exec-path-from-shell nil t)
@@ -362,3 +420,6 @@ The cursor ends up at the split site on the new line."
   (add-hook 'treemacs-mode-hook
             (lambda ()
               (setq-local window-size-fixed nil))))
+
+;; Machine-local overrides, e.g. backend/model choices and private tokens.
+(load! "local" nil t)

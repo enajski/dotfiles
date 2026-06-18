@@ -8,3 +8,5 @@ chezmoi.toml
 chezmoi.yaml
 chezmoi.json
 
+# Machine-local Doom overrides.
+dot_config/doom/local.el
