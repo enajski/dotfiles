@@ -1,0 +1,8 @@
+# Managed by chezmoi from dot_config/ghostty/config.tmpl.
+
+theme = iTerm2 Solarized Light
+font-family = Fira Code
+font-size = 15
+{{ if eq .chezmoi.os "darwin" -}}
+macos-option-as-alt = left
+{{- end }}
