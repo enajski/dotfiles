@@ -23,17 +23,23 @@ repositories.
 ```text
 dot_config/
   doom/                 -> ~/.config/doom
+  ghostty/              -> ~/.config/ghostty
   shell/                -> ~/.config/shell
   zsh/                  -> ~/.config/zsh
 dot_zshenv.tmpl         -> ~/.zshenv
 dot_zshrc.tmpl          -> ~/.zshrc
 dot_bashrc.tmpl         -> ~/.bashrc
 dot_bash_profile.tmpl   -> ~/.bash_profile
+run_onchange_install-fonts.sh.tmpl  installs Fira Code per OS
 scripts/bootstrap.sh    local installer/apply helper
 ```
 
 `*.tmpl` files are rendered by chezmoi. Non-template shell files are plain
 POSIX-ish shell so both zsh and bash can source them.
+
+`run_onchange_*` scripts execute during `chezmoi apply` and re-run whenever
+their rendered content changes; `run_onchange_install-fonts.sh.tmpl` installs
+Fira Code through the platform package manager (brew cask, apt, dnf, pacman).
 
 ## Bootstrap
 

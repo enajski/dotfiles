@@ -1,0 +1,20 @@
+{{- /* Managed by chezmoi from run_onchange_install-fonts.sh.tmpl. */ -}}
+#!/usr/bin/env sh
+set -eu
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS: install Fira Code via the Homebrew cask.
+if command -v brew >/dev/null 2>&1; then
+  brew install --cask font-fira-code
+fi
+{{ else if eq .chezmoi.os "linux" }}
+# Linux: install Fira Code via the system package manager.
+if command -v apt-get >/dev/null 2>&1; then
+  sudo apt-get update
+  sudo apt-get install -y fonts-firacode
+elif command -v dnf >/dev/null 2>&1; then
+  sudo dnf install -y fira-code-fonts
+elif command -v pacman >/dev/null 2>&1; then
+  sudo pacman -Sy --noconfirm ttf-fira-code
+fi
+{{- end }}
