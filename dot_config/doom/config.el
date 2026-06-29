@@ -253,15 +253,13 @@
           (lambda ()
             (setq-local copilot-indent-offset 2)))
 
-(use-package! codetutor
-  :demand t
-  :init
-  (setq codetutor-backend 'auto
-        codetutor-model nil
-        codetutor-open-on-enable nil
-        codetutor-start-session-on-open t
-        codetutor-review-on-save t)
-  :config
+(setq codetutor-backend 'auto
+      codetutor-model nil
+      codetutor-open-on-enable nil
+      codetutor-start-session-on-open t
+      codetutor-review-on-save t)
+
+(when (require 'codetutor nil t)
   (dolist (mode '(clojure-mode
                   clojurescript-mode
                   clojurec-mode
