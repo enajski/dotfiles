@@ -253,34 +253,6 @@
           (lambda ()
             (setq-local copilot-indent-offset 2)))
 
-(setq codetutor-backend 'auto
-      codetutor-model nil
-      codetutor-open-on-enable nil
-      codetutor-start-session-on-open t
-      codetutor-review-on-save t)
-
-(when (require 'codetutor nil t)
-  (dolist (mode '(clojure-mode
-                  clojurescript-mode
-                  clojurec-mode
-                  clojure-ts-mode
-                  clojurescript-ts-mode
-                  clojurec-ts-mode))
-    (add-to-list 'codetutor-language-by-major-mode
-                 (cons mode 'clojure)))
-  (defun my/codetutor-decode-utf-8 (text)
-    "Decode byte-encoded UTF-8 backend output before CodeTutor renders it."
-    (cond
-     ((not (stringp text)) text)
-     ((not (multibyte-string-p text))
-      (decode-coding-string text 'utf-8 t))
-     ((string-match-p "[\200-\377]" text)
-      (decode-coding-string (string-make-unibyte text) 'utf-8 t))
-     (t text)))
-  (advice-add 'codetutor--backend-answer :filter-return
-              #'my/codetutor-decode-utf-8)
-  (codetutor-mode 1))
-
 ;; Keep your shell environment import behavior for GUI sessions
 (when (display-graphic-p)
   (when (require 'exec-path-from-shell nil t)
