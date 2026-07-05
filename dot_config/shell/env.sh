@@ -35,6 +35,10 @@ if [ -r "/snap/bin" ]; then
   path_prepend /snap/bin
 fi
 
+if [ -d "$HOME/go/bin" ]; then
+  path_prepend "$HOME/go/bin"
+fi
+
 export PATH
 export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-vim}"

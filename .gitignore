@@ -10,3 +10,11 @@ chezmoi.json
 
 # Machine-local Doom overrides.
 dot_config/doom/local.el
+.todos/
+.sidecar/
+.sidecar-agent
+.sidecar-task
+.sidecar-pr
+.sidecar-start.sh
+.sidecar-base
+.td-root
