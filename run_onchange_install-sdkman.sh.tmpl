@@ -1,0 +1,16 @@
+{{- /* Managed by chezmoi from run_onchange_install-sdkman.sh.tmpl. */ -}}
+#!/usr/bin/env sh
+set -eu
+
+# ponytail: official installer, idempotent via its own check + this guard.
+if [ -r "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+  exit 0
+fi
+
+if ! command -v curl >/dev/null 2>&1; then
+  echo "sdkman install needs curl" >&2
+  exit 1
+fi
+
+export SDKMAN_DIR="$HOME/.sdkman"
+curl -fsSL "https://get.sdkman.io?rcupdate=false" | bash
