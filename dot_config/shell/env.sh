@@ -31,6 +31,18 @@ if [ -r "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
   . "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
 
+# Point sdkman JDKs at the system Java trust store so update-ca-certificates
+# (corporate CAs, etc.) is honoured. Run after `sdk install java <ver>`.
+# ponytail: manual re-run per new JDK; wrap `sdk` if that gets annoying.
+sdk_link_cacerts() {
+  system_cacerts=/etc/ssl/certs/java/cacerts
+  [ -r "$system_cacerts" ] || { echo "no $system_cacerts (install ca-certificates-java)" >&2; return 1; }
+  for d in "$HOME"/.sdkman/candidates/java/*/lib/security; do
+    [ -d "$d" ] || continue
+    ln -sfn "$system_cacerts" "$d/cacerts"
+  done
+}
+
 if [ -r "/snap/bin" ]; then
   path_prepend /snap/bin
 fi
